@@ -1,0 +1,69 @@
+﻿@model inferse.Models.Code
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Code</legend>
+
+        @Html.HiddenFor(model => model.CodeId)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Post)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Post)
+            @Html.ValidationMessageFor(model => model.Post)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PostedOn)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PostedOn)
+            @Html.ValidationMessageFor(model => model.PostedOn)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsDeleted)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsDeleted)
+            @Html.ValidationMessageFor(model => model.IsDeleted)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastModified)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastModified)
+            @Html.ValidationMessageFor(model => model.LastModified)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserId, "User")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("UserId", String.Empty)
+            @Html.ValidationMessageFor(model => model.UserId)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

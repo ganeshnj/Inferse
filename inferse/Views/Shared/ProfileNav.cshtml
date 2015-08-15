@@ -1,0 +1,6 @@
+﻿
+    <ul>
+        <li>@Html.ActionLink("Codes", "Profile", "Code", new { id = ViewBag.UserProfile.UserId }, null)</li>
+        <li>@Html.ActionLink("Followers", "Follower", "Account", new { id = ViewBag.UserProfile.UserId }, null)</li>
+        <li>@Html.ActionLink("Following", "Following", "Account",  new { id = ViewBag.UserProfile.UserId }, null)</li>
+    </ul>

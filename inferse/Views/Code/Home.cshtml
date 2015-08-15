@@ -1,0 +1,101 @@
+﻿@model IEnumerable<inferse.Models.Code>
+@{
+    ViewBag.Title = "Wall";
+}
+@using inferse.Helpers;
+@using PagedList;
+@using PagedList.Mvc;
+@using System.Text.RegularExpressions;
+@Styles.Render("~/Content/PagedList.css")
+
+@{
+    int userId = Convert.ToInt32(ViewContext.RouteData.Values["id"]);
+    int loginUserId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
+
+    Boolean isMyWall;
+    if (userId == loginUserId || userId == 0)
+    {
+        isMyWall = true;
+    }
+    else
+    {
+        isMyWall = false;
+    }
+}
+
+<div id="dashboard">
+    <div class="mini-profile module">
+        <div id="profile-summary" class="module-item">
+            <h2>
+                @ViewBag.UserProfile.Name
+            </h2>
+            <b class="username">
+              @string.Format("{0}" + ViewBag.UserProfile.UserName, "@")
+            </b>
+            <small>@Html.ActionLink("View complete profile", "Profile", new { id = ViewBag.UserProfile.UserId})</small>
+        </div>
+
+        <div id="profile-stats" class="module-item">
+            <ul>
+                <li><b>@Html.ActionLink((string)ViewBag.PostsCount, "Profile", new { id = ViewBag.UserProfile.UserId})</b><br /><small>Posts</small></li>
+                <li><b>@Html.ActionLink((string)ViewBag.FollowerCount, "Follower", "Account", new { id = ViewBag.UserProfile.UserId}, null)</b><br /><small>Follower</small></li>
+                <li><b>@Html.ActionLink((string)ViewBag.FollowingCount, "Following", "Account", new { id = ViewBag.UserProfile.UserId}, null)</b><br /><small>Following</small></li>
+            </ul>
+        </div>
+
+        <div id="post-box" class="module-item">
+            @Html.Partial("CodeBox")
+        </div>
+    </div>
+</div>
+
+
+<div id="timeline">
+    <div class="content-header">
+          <h2>Timeline</h2>
+    </div>
+  <ul id="posts">
+       @foreach (var item in Model) {
+  
+            <li class="stream-item">
+                <figure>
+                    @if(item.User.ProfileImageUrl != null)
+                    {
+                        @Html.Image(Url.Content("~/Uploads/" + item.User.ProfileImageUrl + "?width=48&height=48"), "Profile Picture", "48")
+                    }
+                    else
+                    {
+                        @Html.Image(Url.Content("~/Uploads/avatar.png" + "?width=48&height=48"), "Profile Picture", "48")
+                    }
+                </figure>
+                <article>
+                    <header>
+                        @if(item.User.Name!= null)
+                        {
+                             <b>@Html.ActionLink(item.User.Name, "Profile", "Code" ,new { id= item.UserId }, null)</b>
+                        }
+                        <small>@Html.ActionLink(string.Format("{0}" + item.User.UserName,"@"), "Profile", "Code", new { id= item.UserId }, null)</small>
+                    </header>
+                    <div class="content">
+                         @Html.DisplayFor(modelItem => item.Post)
+                         @{if(item.Post != null)
+                           {
+                               string post = item.Post.ToString();
+                               foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(post, "http://(\\S+?)\\.(jpg|png|gif)"))
+                               {
+                                   @Html.Image("~" + m.Groups[1].Value.ToString() + "?width=72&height=72", "Image", "30")
+                               }
+                           }
+                         }
+                    </div>
+                    <footer>
+                        <small>@Html.Timeago(item.PostedOn)</small>
+                    </footer>
+                </article>
+                <div class="clear-fix"></div>
+            </li>
+ 
+        }
+   </ul>
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Home", new { page }))
+</div>

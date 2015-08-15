@@ -1,0 +1,50 @@
+﻿@model inferse.Models.Code
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Code</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Post)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Post)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostedOn)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostedOn)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsDeleted)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsDeleted)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastModified)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastModified)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.User.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.UserName)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.CodeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

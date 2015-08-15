@@ -1,0 +1,82 @@
+﻿@model inferse.Models.UserProfile
+
+@{
+    ViewBag.Title = "Profile";
+}
+@using inferse.Helpers;
+
+<div id="dashboard">
+    <div id="profile-nav" class="module">
+        @Html.Partial("SettingsNav")
+    </div>
+</div>
+
+<div class="content">
+    <div id="settings" class="content-header">
+    <h2>@ViewBag.Title</h2>
+        </div>
+
+    <div class="editor-field control-group">
+        @Html.Image(Url.Content("~/Uploads/" + Model.ProfileImageUrl), "Profile Picture", "72")
+    </div>
+    <div class="control-group">
+        @using (Html.BeginForm("UploadProfileImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="file" />
+            <input type="submit" value="OK" />
+        }
+    </div>
+     <div class="control-group">
+        @using (Html.BeginForm()) {
+            @Html.ValidationSummary(true)
+
+            @Html.HiddenFor(model => model.UserId)
+            @Html.HiddenFor(model=> model.UserName)
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Email)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Location)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Location)
+                @Html.ValidationMessageFor(model => model.Location)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.TimeZone)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(x=> x.TimeZone, ViewBag.TimeZones as SelectList)
+                @Html.ValidationMessageFor(model => model.TimeZone)
+
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Website)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Website)
+                @Html.ValidationMessageFor(model => model.Website)
+            </div>
+    
+            <p>
+                 <input type="submit" value="Save" />
+            </p>
+        }
+         </div>
+</div>

@@ -1,0 +1,35 @@
+﻿    @Styles.Render("~/Content/themes/base/css")
+       
+    @Scripts.Render("~/bundles/jquery")    
+    @Scripts.Render("~/bundles/jqueryui")  
+@if(WebMatrix.WebData.WebSecurity.IsAuthenticated)
+            {
+                 using (Ajax.BeginForm("CodeBox", "Code", new AjaxOptions{ UpdateTargetId = "confirmation", OnSuccess="Clear"}))
+                 {
+                    @Html.ValidationSummary(true)
+                        <fieldset class="ui-widget">
+                            <legend>What's heppening</legend>
+                            <textarea name="post" id="post-text-box"  ></textarea>
+                            <input type="submit" value="Post" class="post-button" data-val="true" data-val-date="The field PostedOn must be a date." data-val-required="The PostedOn field is required."  />
+                        </fieldset>
+                 }
+            }
+<div id="confirmation"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#post-text-box").autocomplete({
+            source: '@Url.Action("FollowingSearch")',
+
+        });
+    });
+    function Clear() {
+        document.getElementById("post-text-box").value = "";
+
+        setTimeout(function () {
+            $('#confirmation').fadeOut();
+        }, 5000);
+
+    }
+</script>
+<script src="~/Scripts/jquery-ui.autocompleteTrigger.js"></script>

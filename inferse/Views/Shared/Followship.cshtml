@@ -1,0 +1,3 @@
+﻿
+                    @Html.ValidationSummary(true)
+                    @Ajax.ActionLink((string)ViewBag.Followship, "Followship", new { id = ViewBag.UserProfile.UserId }, new AjaxOptions { UpdateTargetId = "followship" }, new { @class = "button" })

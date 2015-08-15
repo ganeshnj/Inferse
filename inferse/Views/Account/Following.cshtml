@@ -1,0 +1,125 @@
+﻿@model IEnumerable<inferse.Models.UserProfile>
+
+@{
+    ViewBag.Title = "Following";
+}
+
+@using inferse.Helpers;
+@using PagedList;
+@using PagedList.Mvc;
+@Styles.Render("~/Content/PagedList.css")
+
+@{
+    int userId = Convert.ToInt32(ViewContext.RouteData.Values["id"]);
+    int loginUserId = WebMatrix.WebData.WebSecurity.GetUserId(User.Identity.Name);
+
+    Boolean isMyWall;
+    if (userId == loginUserId || userId == 0)
+    {
+        isMyWall = true;
+    }
+    else
+    {
+        isMyWall = false;
+    }
+}
+
+<div id="dashboard">
+     
+    <div id="profile-nav" class="module">
+        @Html.Partial("ProfileNav")
+    </div>
+    <div class="module">
+        <div id="post-box" class="module-item">
+            @if (WebMatrix.WebData.WebSecurity.IsAuthenticated)
+            {
+                using (Html.BeginForm("Wall", "Code", FormMethod.Post))
+                {
+                @Html.ValidationSummary(true)
+
+                <fieldset>
+                    <legend>What's heppening</legend>
+                    <textarea name="post" id="post-text-box"></textarea>
+                    <input type="submit" value="Post" class="post-button" />
+                </fieldset>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div id="profile-card" class="module">
+    <div id="profile-hedaer" class="module-item">
+        <div id="porfile-picture" class="float-left" >
+            @if (ViewBag.UserProfile.ProfileImageUrl != null)
+            {
+                @Html.Image(Url.Content("~/Uploads/" + (string)ViewBag.UserProfile.ProfileImageUrl + "?width=72&height=72"), "Profile Picture", "72")
+            }
+            else
+            {
+                @Html.Image(Url.Content("~/Uploads/avatar.png" + "?width=72&height=72"), "Profile Picture", "72")
+            }
+        </div>
+        <div id="profile-details" class="float-left">
+            <ul>
+                <li><h1>@ViewBag.UserProfile.Name</h1></li>
+                <li>@string.Format("{0}" +  @ViewBag.UserProfile.UserName, "@")</li>
+                <li>@ViewBag.UserProfile.Location</li>
+                <li>@ViewBag.UserProfile.Website</li>
+            </ul>
+        </div>
+    </div>
+    <div id="profile-stats" class="module-item">
+        <ul>
+            <li><a><b>@ViewBag.PostsCount</b>
+                <br />
+                <small>Posts</small></a></li>
+            <li><a><b>@ViewBag.FollowingCount</b>
+                <br />
+                <small>Following</small></a></li>
+            <li><a><b>@ViewBag.FollowerCount</b>
+                <br />
+                <small>Follower</small></a></li>
+            <li id="followship">
+                @if(WebMatrix.WebData.WebSecurity.IsAuthenticated && isMyWall== false)
+                 {
+                    @Html.Partial("Followship")
+                 }
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="timeline">
+    <div class="content-header">
+        <h2>@ViewBag.Title</h2>
+    </div>
+    <ul id="posts">
+        @foreach (var item in Model)
+        {
+  
+            <li class="stream-item">
+                <figure>
+                    @if (item.ProfileImageUrl != null)
+                    {
+                        @Html.Image(Url.Content("~/Uploads/" + item.ProfileImageUrl + "?width=48&height=48"), "Profile Picture", "48")
+                    }
+                    else
+                    {
+                        @Html.Image(Url.Content("~/Uploads/avatar.png" + "?width=48&height=48"), "Profile Picture", "48")
+                    }
+                </figure>
+                <header>
+                    @if(item.Name!= null)
+                    {
+                         <h3>@Html.ActionLink(item.Name, "Profile", "Code" ,new { id= item.UserId }, null)</h3>
+                    }
+                    @Html.ActionLink(string.Format("{0}" + item.UserName,"@"), "Profile", "Code", new { id= item.UserId }, null)
+                </header>
+                <div class="clear-fix"></div>
+            </li>
+ 
+        }
+    </ul>
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Profile", new { page }))
+</div>
